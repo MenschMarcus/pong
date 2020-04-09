@@ -54,6 +54,9 @@ all_sprites_list.add(ball)
 # -> e.g. clicks the close button
 carryOn = True
 
+# Pause variable: if True: pause
+pause = False
+
 # The clock will be used to control how fast the screen updates
 clock = pygame.time.Clock()
 
@@ -73,72 +76,80 @@ while carryOn:
     # User did something
     for event in pygame.event.get():
 
-        # If user clicked close
-        # => End the game = exit this loop
-        if event.type == pygame.QUIT:
+         # If user clicked close
+         # => End the game = exit this loop
+         if event.type == pygame.QUIT:
               carryOn = False
-        # If user clicked "x" Key
-        # => End the game = exit this loop
-        elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_x:
-                     carryOn=False
 
-    # React to keypresses
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-      paddleA.moveUp(5)
-    if keys[pygame.K_s]:
-      paddleA.moveDown(5)
-    if keys[pygame.K_UP]:
-      paddleB.moveUp(5)
-    if keys[pygame.K_DOWN]:
-      paddleB.moveDown(5)
+              # If user clicked "x" Key
+              # => End the game = exit this loop
+         elif event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_x:
+                   carryOn = False
+              if event.key == pygame.K_p:
+                   pause = not pause
+
+    # only execute rest of the program if NOT paused
+    if not pause:
+
+         # React to keypresses
+         keys = pygame.key.get_pressed()
+         if keys[pygame.K_w]:
+              paddleA.moveUp(5)
+         if keys[pygame.K_s]:
+              paddleA.moveDown(5)
+         if keys[pygame.K_UP]:
+              paddleB.moveUp(5)
+         if keys[pygame.K_DOWN]:
+              paddleB.moveDown(5)
 
     # -------------------------------------------------------------------------
     # Game Logic!
     # -------------------------------------------------------------------------
-    all_sprites_list.update()
 
-    #Check if the ball is bouncing against any of the 4 walls:
-    if ball.rect.x>=690:
-        scoreA+=1
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.x<=0:
-        scoreB+=1
-        ball.velocity[0] = -ball.velocity[0]
-    if ball.rect.y>490:
-        ball.velocity[1] = -ball.velocity[1]
-    if ball.rect.y<0:
-        ball.velocity[1] = -ball.velocity[1]
 
-    #Detect collisions between the ball and the paddles
-    if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
-      ball.bounce()
+         all_sprites_list.update()
 
-    # -------------------------------------------------------------------------
-    # Drawing the screen
-    # -------------------------------------------------------------------------
+         #Check if the ball is bouncing against any of the 4 walls:
+         if ball.rect.x>=690:
+             scoreA+=1
+             ball.velocity[0] = -ball.velocity[0]
+         if ball.rect.x<=0:
+             scoreB+=1
+             ball.velocity[0] = -ball.velocity[0]
+         if ball.rect.y>490:
+             ball.velocity[1] = -ball.velocity[1]
+         if ball.rect.y<0:
+             ball.velocity[1] = -ball.velocity[1]
 
-    # First, clear the screen to black.
-    screen.fill(BLACK)
-    #Draw the net
-    pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
+         #Detect collisions between the ball and the paddles
+         if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
+              ball.bounce()
 
-    #Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
-    all_sprites_list.draw(screen)
+         # -------------------------------------------------------------------------
+         # Drawing the screen
+         # -------------------------------------------------------------------------
 
-    #Display scores:
-    font = pygame.font.Font(None, 74)
-    text = font.render(str(scoreA), 1, WHITE)
-    screen.blit(text, (250,10))
-    text = font.render(str(scoreB), 1, WHITE)
-    screen.blit(text, (420,10))
+         # First, clear the screen to black.
+         screen.fill(BLACK)
+         #Draw the net
+         pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
 
-    # Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
+         #Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
+         all_sprites_list.draw(screen)
 
-    # Limit to 60 frames per second
-    clock.tick(60)
+         #Display scores:
+         font = pygame.font.Font(None, 74)
+         text = font.render(str(scoreA), 1, WHITE)
+         screen.blit(text, (250,10))
+         text = font.render(str(scoreB), 1, WHITE)
+         screen.blit(text, (420,10))
+
+         # Go ahead and update the screen with what we've drawn.
+         pygame.display.flip()
+
+         # Limit to 60 frames per second
+         clock.tick(60)
 
 #Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
