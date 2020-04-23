@@ -12,10 +12,22 @@ from Ball import Ball
 # CONSTANTS
 ###############################################################################
 
-# Define some colors
-BLACK = (0,0,0)
-WHITE = (255,255,255)
+MAX_SPEED = 15
 
+# Define some colors
+BLACK     = (0,0,0)
+WHITE     = (255,255,255)
+RED       = (255,0,0)
+YELLOW    = (255,255,0)
+GREEN     = (0,255,0)
+BLUE      = (0,0,255)
+ORANGE    = (255,100,0)
+
+# center
+CENTER    = {
+     'x': 345,
+     'y': 195
+}
 ###############################################################################
 # MAIN PROGRAM
 ###############################################################################
@@ -37,9 +49,8 @@ paddleB.rect.x = 670
 paddleB.rect.y = 200
 
 # Create a ball
-ball = Ball(WHITE, 30, 30)
-ball.rect.x = 345
-ball.rect.y = 195
+ball = Ball(WHITE, 30, 30, CENTER)
+ball.reset()
 
 # This will be a list that will contain all the sprites we intend to use in our game.
 # sprite = graphic element that is seen on screen
@@ -88,6 +99,20 @@ while carryOn:
                    carryOn = False
               if event.key == pygame.K_p:
                    pause = not pause
+              if event.key == pygame.K_PLUS:
+                   ball.velocity[0] *= 2
+                   ball.velocity[1] *= 2
+                   if ball.velocity[0] > MAX_SPEED:
+                        ball.velocity[0] = MAX_SPEED
+                   if ball.velocity[1] > MAX_SPEED:
+                        ball.velocity[1] = MAX_SPEED
+                   if ball.velocity[0] < -MAX_SPEED:
+                        ball.velocity[0] = -MAX_SPEED
+                   if ball.velocity[1] < -MAX_SPEED:
+                        ball.velocity[1] = -MAX_SPEED
+              if event.key == pygame.K_MINUS:
+                   ball.velocity[0] *= 0.5
+                   ball.velocity[1] *= 0.5
 
     # only execute rest of the program if NOT paused
     if not pause:
@@ -107,18 +132,25 @@ while carryOn:
     # Game Logic!
     # -------------------------------------------------------------------------
 
-
          all_sprites_list.update()
 
          #Check if the ball is bouncing against any of the 4 walls:
+
+         # right wall: point for A
          if ball.rect.x>=690:
              scoreA+=1
              ball.velocity[0] = -ball.velocity[0]
+             ball.reset()
+
+         # left wall: point for B
          if ball.rect.x<=0:
              scoreB+=1
              ball.velocity[0] = -ball.velocity[0]
+             ball.reset()
+
          if ball.rect.y>490:
              ball.velocity[1] = -ball.velocity[1]
+
          if ball.rect.y<0:
              ball.velocity[1] = -ball.velocity[1]
 
