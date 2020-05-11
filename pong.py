@@ -99,20 +99,12 @@ while carryOn:
                    carryOn = False
               if event.key == pygame.K_p:
                    pause = not pause
+              if event.key == pygame.K_r:
+                   ball.reset()
               if event.key == pygame.K_PLUS:
-                   ball.velocity[0] *= 2
-                   ball.velocity[1] *= 2
-                   if ball.velocity[0] > MAX_SPEED:
-                        ball.velocity[0] = MAX_SPEED
-                   if ball.velocity[1] > MAX_SPEED:
-                        ball.velocity[1] = MAX_SPEED
-                   if ball.velocity[0] < -MAX_SPEED:
-                        ball.velocity[0] = -MAX_SPEED
-                   if ball.velocity[1] < -MAX_SPEED:
-                        ball.velocity[1] = -MAX_SPEED
+                   ball.speedup()
               if event.key == pygame.K_MINUS:
-                   ball.velocity[0] *= 0.5
-                   ball.velocity[1] *= 0.5
+                   ball.speeddown()
 
     # only execute rest of the program if NOT paused
     if not pause:
@@ -164,13 +156,13 @@ while carryOn:
 
          # First, clear the screen to black.
          screen.fill(BLACK)
-         #Draw the net
+         # Draw the net
          pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
 
-         #Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
+         # Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
          all_sprites_list.draw(screen)
 
-         #Display scores:
+         # Display scores:
          font = pygame.font.Font(None, 74)
          text = font.render(str(scoreA), 1, WHITE)
          screen.blit(text, (250,10))
@@ -183,5 +175,5 @@ while carryOn:
          # Limit to 60 frames per second
          clock.tick(60)
 
-#Once we have exited the main program loop we can stop the game engine:
+# Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
