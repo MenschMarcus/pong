@@ -2,6 +2,7 @@ import pygame
 from random import randint
 
 BLACK = (0,0,0)
+
 MAX_SPEED = 20
 MIN_SPEED = 2
 SPEEDUP_FACTOR = 1.5
@@ -33,8 +34,8 @@ class Ball(pygame.sprite.Sprite):
           self.rect = self.image.get_rect()
 
      def reset(self):
-          self.rect.x = self.center['x']
-          self.rect.y = self.center['y']
+          self.rect.x = self.center[0]
+          self.rect.y = self.center[1]
 
      def update(self):
           self.rect.x += self.velocity[0]
@@ -43,6 +44,9 @@ class Ball(pygame.sprite.Sprite):
      def bounce(self):
           self.velocity[0] = -self.velocity[0]
           self.velocity[1] = randint(-5,5)
+
+     def bounce_y(self):
+          self.velocity[1] = -self.velocity[1]
 
      def speedup(self):
           # calculate direction (y = m*x -> m = y/x)

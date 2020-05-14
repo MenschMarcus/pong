@@ -12,7 +12,19 @@ from Ball import Ball
 # CONSTANTS
 ###############################################################################
 
-MAX_SPEED = 15
+# Window dimensions
+WIDTH     = 1300
+HEIGHT    = 200
+
+# Paddle dimensions
+PADDLE_TO_WALL = 20
+PADDLE_WIDTH   = 10
+PADDLE_HEIGHT  = 100
+
+PADDLE_MOVE_DISTANCE = 8
+
+BALL_SIZE = 30
+NET_WIDTH = 8
 
 # Define some colors
 BLACK     = (0,0,0)
@@ -23,11 +35,6 @@ GREEN     = (0,255,0)
 BLUE      = (0,0,255)
 ORANGE    = (255,100,0)
 
-# center
-CENTER    = {
-     'x': 345,
-     'y': 195
-}
 ###############################################################################
 # MAIN PROGRAM
 ###############################################################################
@@ -35,21 +42,22 @@ CENTER    = {
 pygame.init()
 
 # Open a new window
-size = (700, 500)
+size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("The Amazing Pong Game")
 
 # Create two Paddles
-paddleA = Paddle(WHITE, 10, 100)
-paddleA.rect.x = 20
-paddleA.rect.y = 200
+paddleA = Paddle(WHITE, PADDLE_WIDTH, PADDLE_HEIGHT, HEIGHT-PADDLE_HEIGHT)
+paddleA.rect.x = PADDLE_TO_WALL
+paddleA.rect.y = (HEIGHT / 2) - (PADDLE_HEIGHT / 2)
 
-paddleB = Paddle(WHITE, 10, 100)
-paddleB.rect.x = 670
-paddleB.rect.y = 200
+paddleB = Paddle(WHITE, PADDLE_WIDTH, PADDLE_HEIGHT, HEIGHT-PADDLE_HEIGHT)
+paddleB.rect.x = WIDTH - PADDLE_WIDTH - PADDLE_TO_WALL
+paddleB.rect.y = (HEIGHT / 2) - (PADDLE_HEIGHT / 2)
 
 # Create a ball
-ball = Ball(WHITE, 30, 30, CENTER)
+center = [int(WIDTH/2), int(HEIGHT/2)]
+ball = Ball(WHITE, BALL_SIZE, BALL_SIZE, center)
 ball.reset()
 
 # This will be a list that will contain all the sprites we intend to use in our game.
@@ -112,13 +120,13 @@ while carryOn:
          # React to keypresses
          keys = pygame.key.get_pressed()
          if keys[pygame.K_w]:
-              paddleA.moveUp(5)
+              paddleA.moveUp(PADDLE_MOVE_DISTANCE)
          if keys[pygame.K_s]:
-              paddleA.moveDown(5)
+              paddleA.moveDown(PADDLE_MOVE_DISTANCE)
          if keys[pygame.K_UP]:
-              paddleB.moveUp(5)
+              paddleB.moveUp(PADDLE_MOVE_DISTANCE)
          if keys[pygame.K_DOWN]:
-              paddleB.moveDown(5)
+              paddleB.moveDown(PADDLE_MOVE_DISTANCE)
 
     # -------------------------------------------------------------------------
     # Game Logic!
@@ -129,22 +137,24 @@ while carryOn:
          #Check if the ball is bouncing against any of the 4 walls:
 
          # right wall: point for A
-         if ball.rect.x>=690:
-             scoreA+=1
-             ball.velocity[0] = -ball.velocity[0]
+         if ball.rect.x > WIDTH - PADDLE_WIDTH - BALL_SIZE/2:
+             scoreA += 1
              ball.reset()
+             ball.bounce()
 
          # left wall: point for B
-         if ball.rect.x<=0:
-             scoreB+=1
-             ball.velocity[0] = -ball.velocity[0]
+         if ball.rect.x < 0:
+             scoreB += 1
              ball.reset()
+             ball.bounce()
 
-         if ball.rect.y>490:
-             ball.velocity[1] = -ball.velocity[1]
+         # lower wall
+         if ball.rect.y > HEIGHT - BALL_SIZE:
+             ball.bounce_y()
 
-         if ball.rect.y<0:
-             ball.velocity[1] = -ball.velocity[1]
+         # upper wall
+         if ball.rect.y < 0:
+             ball.bounce_y()
 
          #Detect collisions between the ball and the paddles
          if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
@@ -156,18 +166,21 @@ while carryOn:
 
          # First, clear the screen to black.
          screen.fill(BLACK)
+
          # Draw the net
-         pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
+         pygame.draw.line(screen, WHITE, [(WIDTH/2)-(NET_WIDTH/2), 0], [(WIDTH/2)-(NET_WIDTH/2), HEIGHT], NET_WIDTH)
 
          # Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
          all_sprites_list.draw(screen)
 
          # Display scores:
-         font = pygame.font.Font(None, 74)
-         text = font.render(str(scoreA), 1, WHITE)
-         screen.blit(text, (250,10))
-         text = font.render(str(scoreB), 1, WHITE)
-         screen.blit(text, (420,10))
+         font = pygame.font.Font(None, int(HEIGHT/8))
+         scoreA_text = font.render(str(scoreA), 1, WHITE)
+         scoreA_text_width = scoreA_text.get_size()[0]
+         screen.blit(scoreA_text,(int(WIDTH*1/3)-scoreA_text_width/2,10))
+         scoreB_text = font.render(str(scoreB), 1, WHITE)
+         scoreB_text_width = scoreB_text.get_size()[0]
+         screen.blit(scoreB_text,(int(WIDTH*2/3)-scoreB_text_width/2,10))
 
          # Go ahead and update the screen with what we've drawn.
          pygame.display.flip()
