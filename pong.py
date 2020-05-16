@@ -13,8 +13,8 @@ from Ball import Ball
 ###############################################################################
 
 # Window dimensions
-WIDTH     = 1300
-HEIGHT    = 200
+WIDTH     = 800
+HEIGHT    = 600
 
 # Paddle dimensions
 PADDLE_TO_WALL = 20
