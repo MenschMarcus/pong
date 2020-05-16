@@ -35,6 +35,7 @@ GREEN     = (0,255,0)
 BLUE      = (0,0,255)
 ORANGE    = (255,100,0)
 
+
 ###############################################################################
 # MAIN PROGRAM
 ###############################################################################
@@ -88,105 +89,105 @@ scoreB = 0
 # -----------------------------------------------------------------------------
 while carryOn:
 
-    # -------------------------------------------------------------------------
-    # Main Event Loop
-    # -------------------------------------------------------------------------
+     # -------------------------------------------------------------------------
+     # Main Event Loop
+     # -------------------------------------------------------------------------
 
-    # User did something
-    for event in pygame.event.get():
+     # User did something
+     for event in pygame.event.get():
 
-         # If user clicked close
-         # => End the game = exit this loop
-         if event.type == pygame.QUIT:
-              carryOn = False
+          # If user clicked close
+          # => End the game = exit this loop
+          if event.type == pygame.QUIT:
+               carryOn = False
 
-              # If user clicked "x" Key
-              # => End the game = exit this loop
-         elif event.type == pygame.KEYDOWN:
-              if event.key == pygame.K_x:
-                   carryOn = False
-              if event.key == pygame.K_p:
-                   pause = not pause
-              if event.key == pygame.K_r:
-                   ball.reset()
-              if event.key == pygame.K_PLUS:
-                   ball.speedup()
-              if event.key == pygame.K_MINUS:
-                   ball.speeddown()
+          # If user clicked "x" Key
+          # => End the game = exit this loop
+          elif event.type == pygame.KEYDOWN:
+               if event.key == pygame.K_x:
+                    carryOn = False
+               if event.key == pygame.K_p:
+                    pause = not pause
+               if event.key == pygame.K_r:
+                    ball.reset()
+               if event.key == pygame.K_PLUS:
+                    ball.speedup()
+               if event.key == pygame.K_MINUS:
+                    ball.speeddown()
 
-    # only execute rest of the program if NOT paused
-    if not pause:
+     # only execute rest of the program if NOT paused
+     if not pause:
 
-         # React to keypresses
-         keys = pygame.key.get_pressed()
-         if keys[pygame.K_w]:
-              paddleA.moveUp(PADDLE_MOVE_DISTANCE)
-         if keys[pygame.K_s]:
-              paddleA.moveDown(PADDLE_MOVE_DISTANCE)
-         if keys[pygame.K_UP]:
-              paddleB.moveUp(PADDLE_MOVE_DISTANCE)
-         if keys[pygame.K_DOWN]:
-              paddleB.moveDown(PADDLE_MOVE_DISTANCE)
+          # React to keypresses
+          keys = pygame.key.get_pressed()
+          if keys[pygame.K_w]:
+               paddleA.moveUp(PADDLE_MOVE_DISTANCE)
+          if keys[pygame.K_s]:
+               paddleA.moveDown(PADDLE_MOVE_DISTANCE)
+          if keys[pygame.K_UP]:
+               paddleB.moveUp(PADDLE_MOVE_DISTANCE)
+          if keys[pygame.K_DOWN]:
+               paddleB.moveDown(PADDLE_MOVE_DISTANCE)
 
-    # -------------------------------------------------------------------------
-    # Game Logic!
-    # -------------------------------------------------------------------------
+          # -------------------------------------------------------------------------
+          # Game Logic!
+          # -------------------------------------------------------------------------
 
-         all_sprites_list.update()
+          all_sprites_list.update()
 
-         #Check if the ball is bouncing against any of the 4 walls:
+          #Check if the ball is bouncing against any of the 4 walls:
 
-         # right wall: point for A
-         if ball.rect.x > WIDTH - PADDLE_WIDTH - BALL_SIZE/2:
-             scoreA += 1
-             ball.reset()
-             ball.bounce()
+          # right wall: point for A
+          if ball.rect.x > WIDTH - PADDLE_WIDTH - BALL_SIZE/2:
+               scoreA += 1
+               ball.reset()
+               ball.bounce()
 
-         # left wall: point for B
-         if ball.rect.x < 0:
-             scoreB += 1
-             ball.reset()
-             ball.bounce()
+          # left wall: point for B
+          if ball.rect.x < 0:
+               scoreB += 1
+               ball.reset()
+               ball.bounce()
 
-         # lower wall
-         if ball.rect.y > HEIGHT - BALL_SIZE:
-             ball.bounce_y()
+          # lower wall
+          if ball.rect.y > HEIGHT - BALL_SIZE:
+               ball.bounce_y()
 
-         # upper wall
-         if ball.rect.y < 0:
-             ball.bounce_y()
+          # upper wall
+          if ball.rect.y < 0:
+               ball.bounce_y()
 
-         #Detect collisions between the ball and the paddles
-         if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
-              ball.bounce()
+          #Detect collisions between the ball and the paddles
+          if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
+               ball.bounce()
 
-         # -------------------------------------------------------------------------
-         # Drawing the screen
-         # -------------------------------------------------------------------------
+          # -------------------------------------------------------------------------
+          # Drawing the screen
+          # -------------------------------------------------------------------------
 
-         # First, clear the screen to black.
-         screen.fill(BLACK)
+          # First, clear the screen to black.
+          screen.fill(BLACK)
 
-         # Draw the net
-         pygame.draw.line(screen, WHITE, [(WIDTH/2)-(NET_WIDTH/2), 0], [(WIDTH/2)-(NET_WIDTH/2), HEIGHT], NET_WIDTH)
+          # Draw the net
+          pygame.draw.line(screen, WHITE, [(WIDTH/2)-(NET_WIDTH/2), 0], [(WIDTH/2)-(NET_WIDTH/2), HEIGHT], NET_WIDTH)
 
-         # Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
-         all_sprites_list.draw(screen)
+          # Now let's draw all the sprites in one go. (For now we only have 2 sprites!)
+          all_sprites_list.draw(screen)
 
-         # Display scores:
-         font = pygame.font.Font(None, int(HEIGHT/8))
-         scoreA_text = font.render(str(scoreA), 1, WHITE)
-         scoreA_text_width = scoreA_text.get_size()[0]
-         screen.blit(scoreA_text,(int(WIDTH*1/3)-scoreA_text_width/2,10))
-         scoreB_text = font.render(str(scoreB), 1, WHITE)
-         scoreB_text_width = scoreB_text.get_size()[0]
-         screen.blit(scoreB_text,(int(WIDTH*2/3)-scoreB_text_width/2,10))
+          # Display scores:
+          font = pygame.font.Font(None, int(HEIGHT/8))
+          scoreA_text = font.render(str(scoreA), 1, WHITE)
+          scoreA_text_width = scoreA_text.get_size()[0]
+          screen.blit(scoreA_text,(int(WIDTH*1/3)-scoreA_text_width/2,10))
+          scoreB_text = font.render(str(scoreB), 1, WHITE)
+          scoreB_text_width = scoreB_text.get_size()[0]
+          screen.blit(scoreB_text,(int(WIDTH*2/3)-scoreB_text_width/2,10))
 
-         # Go ahead and update the screen with what we've drawn.
-         pygame.display.flip()
+          # Go ahead and update the screen with what we've drawn.
+          pygame.display.flip()
 
-         # Limit to 60 frames per second
-         clock.tick(60)
+          # Limit to 60 frames per second
+          clock.tick(60)
 
 # Once we have exited the main program loop we can stop the game engine:
 pygame.quit()

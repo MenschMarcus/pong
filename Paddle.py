@@ -4,34 +4,34 @@ import pygame
 BLACK = (0,0,0)
 
 class Paddle(pygame.sprite.Sprite):
-    #This class represents a paddle. It derives from the "Sprite" class in Pygame.
+     #This class represents a paddle. It derives from the "Sprite" class in Pygame.
 
-    def __init__(self, color, width, height, max_move_height):
-        # Call the parent class (Sprite) constructor
-        super().__init__()
+     def __init__(self, color, width, height, max_move_height):
+     # Call the parent class (Sprite) constructor
+          super().__init__()
 
-        self.max_move_height = max_move_height
+          self.max_move_height = max_move_height
 
-        # Pass in the color of the paddle, and its x and y position, width and height.
-        # Set the background color and set it to be transparent
-        self.image = pygame.Surface([width, height])
-        self.image.fill(BLACK)
-        self.image.set_colorkey(BLACK)
+          # Pass in the color of the paddle, and its x and y position, width and height.
+          # Set the background color and set it to be transparent
+          self.image = pygame.Surface([width, height])
+          self.image.fill(BLACK)
+          self.image.set_colorkey(BLACK)
 
-        # Draw the paddle (a rectangle!)
-        pygame.draw.rect(self.image, color, [0, 0, width, height])
+          # Draw the paddle (a rectangle!)
+          pygame.draw.rect(self.image, color, [0, 0, width, height])
 
-        # Fetch the rectangle object that has the dimensions of the image.
-        self.rect = self.image.get_rect()
+          # Fetch the rectangle object that has the dimensions of the image.
+          self.rect = self.image.get_rect()
 
-    def moveUp(self, pixels):
-        self.rect.y -= pixels
-		# Clip to window boundary (min. 0 px)
-        if self.rect.y < 0:
-          self.rect.y = 0
+     def moveUp(self, pixels):
+          self.rect.y -= pixels
+          # Clip to window boundary (min. 0 px)
+          if self.rect.y < 0:
+               self.rect.y = 0
 
-    def moveDown(self, pixels):
-        self.rect.y += pixels
-  	    # Clip to window boundary
-        if self.rect.y > self.max_move_height:
-          self.rect.y = self.max_move_height
+     def moveDown(self, pixels):
+          self.rect.y += pixels
+          # Clip to window boundary
+          if self.rect.y > self.max_move_height:
+               self.rect.y = self.max_move_height

@@ -8,7 +8,7 @@ MIN_SPEED = 2
 SPEEDUP_FACTOR = 1.5
 
 class Ball(pygame.sprite.Sprite):
-#This class represents a ball. It derives from the "Sprite" class in Pygame.
+     #This class represents a ball. It derives from the "Sprite" class in Pygame.
 
      def __init__(self, color, width, height, center):
           # Call the parent class (Sprite) constructor
