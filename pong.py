@@ -8,6 +8,7 @@ import pygame
 from Paddle import Paddle
 from Ball import Ball
 
+
 ###############################################################################
 # CONSTANTS
 ###############################################################################
@@ -42,6 +43,10 @@ ORANGE    = (255,100,0)
 
 pygame.init()
 
+
+
+
+
 # Open a new window
 size = (WIDTH, HEIGHT)
 screen = pygame.display.set_mode(size)
@@ -74,20 +79,69 @@ all_sprites_list.add(ball)
 # -> e.g. clicks the close button
 carryOn = True
 
-# Pause variable: if True: pause
+# Is the game currently paused?
 pause = False
+
+# Are we in the intro?
+intro = True
 
 # The clock will be used to control how fast the screen updates
 clock = pygame.time.Clock()
+
+# background image
+intro_image = pygame.image.load('pong_intro.png')
 
 #Initialise player scores
 scoreA = 0
 scoreB = 0
 
 # -----------------------------------------------------------------------------
+# draw text on screen
+# -----------------------------------------------------------------------------
+
+def text_on_screen(screen, text, font_size, font_color, pos_x, pos_y):
+     font = pygame.font.Font('freesansbold.ttf',font_size)
+     text_surface = font.render(text, True, font_color)
+     text_rectangle = text_surface.get_rect()
+     text_rectangle.center = (pos_x,pos_y)
+     screen.blit(text_surface, text_rectangle)
+
+
+
+# -----------------------------------------------------------------------------
 # Main Program Loop
 # -----------------------------------------------------------------------------
 while carryOn:
+
+     # -------------------------------------------------------------------------
+     # Intro
+     # -------------------------------------------------------------------------
+
+     # intro screen
+     while intro:
+
+          # define the surface (screen)
+          screen.fill(GREEN)
+
+          # draw (= render/blit) text on the surface (screen)
+          text_on_screen(screen, "PONG", 100, BLACK, WIDTH/2, 100)
+          text_on_screen(screen, "(C) Marcus Kossatz", 15, BLACK, WIDTH/2, HEIGHT-30)
+
+          # draw image on the surface (screen)
+          center = WIDTH/2 - intro_image.get_size()[0]/2
+          bottom = HEIGHT - intro_image.get_size()[1] - 75
+          screen.blit(intro_image,(center, bottom))
+
+          pygame.display.update()
+          clock.tick(15)
+
+          # end intro on click on return key ("Enter")
+          for event in pygame.event.get():
+               if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                         intro = False
+                    if event.key == pygame.K_x:
+                         pygame.quit()
 
      # -------------------------------------------------------------------------
      # Main Event Loop
@@ -104,6 +158,8 @@ while carryOn:
           # If user clicked "x" Key
           # => End the game = exit this loop
           elif event.type == pygame.KEYDOWN:
+               if event.key == pygame.K_RETURN:
+                    intro = False
                if event.key == pygame.K_x:
                     carryOn = False
                if event.key == pygame.K_p:
@@ -129,9 +185,9 @@ while carryOn:
           if keys[pygame.K_DOWN]:
                paddleB.moveDown(PADDLE_MOVE_DISTANCE)
 
-          # -------------------------------------------------------------------------
+          # --------------------------------------------------------------------
           # Game Logic!
-          # -------------------------------------------------------------------------
+          # --------------------------------------------------------------------
 
           all_sprites_list.update()
 
@@ -161,9 +217,9 @@ while carryOn:
           if pygame.sprite.collide_mask(ball, paddleA) or pygame.sprite.collide_mask(ball, paddleB):
                ball.bounce()
 
-          # -------------------------------------------------------------------------
+          # --------------------------------------------------------------------
           # Drawing the screen
-          # -------------------------------------------------------------------------
+          # --------------------------------------------------------------------
 
           # First, clear the screen to black.
           screen.fill(BLACK)
